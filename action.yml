@@ -1,0 +1,15 @@
+name: 'Lighthouse CI Action'
+description: 'Audit URLs using Lighthouse and test performance with Lighthouse CI'
+inputs:
+  urls:
+    description: 'List of URL(s) to analyze'
+outputs:
+  resultsPath:
+    description: 'Path to the folder with LHCI results'
+  links:
+    description: 'Links to compare/result UI for each URL (content of links.json)'
+  assertionResults:
+    description: 'Assertion results (content of assertion-results.json)'
+runs:
+  using: 'node16'
+  main: 'src/index.js'
