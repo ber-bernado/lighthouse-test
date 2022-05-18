@@ -2,6 +2,11 @@ const { join } = require('path')
 const fs = require('fs').promises
 const { existsSync } = require('fs')
 
+/** @typedef {{ name: string, expected: number, actual: number, values: number[], operator: string, passed: boolean,
+                auditId: string, auditProperty: string, level: 'warn' | 'error', url: string, auditTitle: string, auditDocumentationLink: string }} LHCIAssertion */
+/** @typedef {{ url: string, isRepresentativeRun: boolean, jsonPath: string, htmlPath: string, summary: {
+                performance: number, accessibility: number, 'best-practices': number, seo: number, pwa: number} }} LHCIManifest */
+
 /**
  *
  * @param {string} resultsPath

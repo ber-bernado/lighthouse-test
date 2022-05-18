@@ -32,7 +32,7 @@ async function main() {
   if (collectStatus !== 0) throw new Error(`LHCI 'collect' has encountered a problem.`)
 
   // upload artifacts as soon as collected
-  await uploadArtifacts(resultsPath, input.artifactName)
+  //await uploadArtifacts(resultsPath, input.artifactName)
 
   const uploadStatus = runChildCommand('upload', ['--target=filesystem', `--outputDir=${resultsPath}`])
   if (uploadStatus !== 0) throw new Error(`LHCI 'upload' failed to upload to fylesystem.`)
