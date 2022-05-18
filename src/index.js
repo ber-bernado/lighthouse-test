@@ -1,9 +1,9 @@
-require('./utils/support-lh-plugins') // add automatic support for LH Plugins env
 const core = require('@actions/core')
 const { join } = require('path')
 const childProcess = require('child_process')
 const lhciCliPath = require.resolve('@lhci/cli/src/cli')
-const { getInput } = require('./config')
+const { getInput, hasAssertConfig } = require('./config')
+const { setAnnotations } = require('./utils/annotations')
 const { setOutput } = require('./utils/output')
 
 /**
@@ -37,7 +37,25 @@ async function main() {
 
   core.endGroup() // Collecting
 
+  /******************************* 2. ASSERT ************************************/
+  if (input.budgetPath || hasAssertConfig(input.configPath)) {
+    core.startGroup(`Asserting`)
+    const assertArgs = []
+
+    if (input.budgetPath) {
+      assertArgs.push(`--budgetsFile=${input.budgetPath}`)
+    } else {
+      assertArgs.push(`--config=${input.configPath}`)
+    }
+
+    // run lhci with problem matcher
+    // https://github.com/actions/toolkit/blob/master/docs/commands.md#problem-matchers
+    runChildCommand('assert', assertArgs)
+    core.endGroup() // Asserting
+  }
+
   await setOutput(resultsPath)
+  await setAnnotations(resultsPath) // set failing error/warning annotations
 }
 
 // run `main()`

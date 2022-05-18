@@ -79,3 +79,15 @@ function interpolateProcessIntoUrls(urls) {
     return url
   })
 }
+
+/**
+ * Check if the file under `configPath` has `assert` params set.
+ *
+ * @param {string | null} configPath
+ */
+
+ exports.hasAssertConfig = function hasAssertConfig(configPath) {
+  if (!configPath) return false
+  const rcFileObj = loadRcFile(configPath)
+  return Boolean(get(rcFileObj, 'ci.assert'))
+}

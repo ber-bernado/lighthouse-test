@@ -14,6 +14,18 @@ exports.getLinks = async function getLinks(resultsPath) {
 }
 
 /**
+ * Get assertions grouped by url and sorted with error first.
+ *
+ * @param {string} resultsPath
+ */
+
+exports.getAssertionResults = async function getAssertionResults(resultsPath) {
+  const assertionResultsPath = join(resultsPath, 'assertion-results.json')
+  if (!existsSync(assertionResultsPath)) return null
+  return /** @type {LHCIAssertion[]} **/ (JSON.parse(await fs.readFile(assertionResultsPath, 'utf8')))
+}
+
+/**
  * Reads manifest.json file and returns the content of that file.
  *
  * @param {string} resultsPath
