@@ -4,8 +4,6 @@ const childProcess = require('child_process')
 const lhciCliPath = require.resolve('@lhci/cli/src/cli')
 const { getInput } = require('./config')
 const { setOutput } = require('./utils/output')
-const configPath = require('../lighthouse.json')
-
 
 async function main() {
   // config
@@ -24,7 +22,7 @@ async function main() {
       collectArgs.push(`--url=${url}`)
     }
   }
-  collectArgs.push(`--config=${configPath}`)
+  if (input.configPath) collectArgs.push(`--config=${input.configPath}`)
 
   const collectStatus = runChildCommand('collect', collectArgs)
   if (collectStatus !== 0) throw new Error(`LHCI 'collect' has encountered a problem.`)

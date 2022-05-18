@@ -1,9 +1,9 @@
 const core = require('@actions/core')
-const { loadRcFile } = require('@lhci/utils/src/lighthouserc')
 const { resolve } = require('path')
 
 exports.getInput = function getInputArgs() {
   const urls = interpolateProcessIntoUrls(getList('urls'))
+  const configPath = core.getInput('configPath') ? resolve(core.getInput('configPath')) : null
 
   if (!urls) {
     core.setFailed(`Need either 'urls' in action parameters or a 'static_dist_dir' in lighthouserc file`)
@@ -11,6 +11,7 @@ exports.getInput = function getInputArgs() {
   }
 
   return {
+    configPath,
     urls,
   }
 }
