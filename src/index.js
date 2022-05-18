@@ -4,15 +4,18 @@ const childProcess = require('child_process')
 const lhciCliPath = require.resolve('@lhci/cli/src/cli')
 const { getInput } = require('./config')
 const { setOutput } = require('./utils/output')
+const configPath = require('../lighthouse.json')
+
 
 async function main() {
+  // config
   core.startGroup('Action config')
   const resultsPath = join(process.cwd(), '.lighthouseci')
   const input = getInput()
   core.info(`Input args: ${JSON.stringify(input, null, '  ')}`)
-  core.endGroup() // Action config
+  core.endGroup() 
 
-  /******************************* 1. COLLECT ***********************************/
+  // colecting
   core.startGroup(`Collecting`)
   const collectArgs = [`--numberOfRuns=1`]
 
@@ -20,7 +23,9 @@ async function main() {
     for (const url of input.urls) {
       collectArgs.push(`--url=${url}`)
     }
-  } 
+  }
+  collectArgs.push(`--config=${configPath}`)
+
   const collectStatus = runChildCommand('collect', collectArgs)
   if (collectStatus !== 0) throw new Error(`LHCI 'collect' has encountered a problem.`)
 
@@ -29,7 +34,7 @@ async function main() {
 
   core.info(`result: ${JSON.stringify(resultsPath, null, '  ')}`)
 
-  core.endGroup() // Collecting
+  core.endGroup()
 
   await setOutput(resultsPath)
 }
@@ -41,8 +46,6 @@ main()
   .then(() => core.debug(`done in ${process.uptime()}s`))
 
 /**
- * Run a child command synchronously.
- *
  * @param {'collect'|'assert'|'upload'} command
  * @param {string[]} [args]
  * @return {number}
