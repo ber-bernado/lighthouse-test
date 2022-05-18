@@ -3,17 +3,6 @@ const { loadRcFile } = require('@lhci/utils/src/lighthouserc')
 const { resolve } = require('path')
 
 exports.getInput = function getInputArgs() {
-  // fallback to upload.serverBaseUrl + upload.token for previous API support
-  const serverBaseUrl = core.getInput('serverBaseUrl') || core.getInput('upload.serverBaseUrl')
-  const serverToken = core.getInput('serverToken') || core.getInput('upload.token')
-
-  // Make sure we don't have LHCI xor API token
-  if (!!serverBaseUrl != !!serverToken) {
-    // Fail and exit
-    core.setFailed(`Need both a LHCI server url and an API token.`)
-    process.exit(1)
-  }
-
   let urls = null
 
   // Inspect lighthouserc file for malformations
@@ -45,7 +34,7 @@ exports.getInput = function getInputArgs() {
   }
 
   return {
-    urls
+    urls,
   }
 }
 

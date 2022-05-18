@@ -8,8 +8,6 @@ outputs:
     description: 'Path to the folder with LHCI results'
   links:
     description: 'Links to compare/result UI for each URL (content of links.json)'
-  assertionResults:
-    description: 'Assertion results (content of assertion-results.json)'
 runs:
   using: 'node16'
   main: 'src/index.js'

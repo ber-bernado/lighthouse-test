@@ -1,9 +1,8 @@
-require('./utils/support-lh-plugins') // add automatic support for LH Plugins env
 const core = require('@actions/core')
 const { join } = require('path')
 const childProcess = require('child_process')
 const lhciCliPath = require.resolve('@lhci/cli/src/cli')
-const { getInput, hasAssertConfig } = require('./config')
+const { getInput } = require('./config')
 const { setAnnotations } = require('./utils/annotations')
 const { setOutput } = require('./utils/output')
 
@@ -31,6 +30,9 @@ async function main() {
   } 
   const collectStatus = runChildCommand('collect', collectArgs)
   if (collectStatus !== 0) throw new Error(`LHCI 'collect' has encountered a problem.`)
+
+  // upload artifacts as soon as collected
+  await uploadArtifacts(resultsPath, input.artifactName)
 
   const uploadStatus = runChildCommand('upload', ['--target=filesystem', `--outputDir=${resultsPath}`])
   if (uploadStatus !== 0) throw new Error(`LHCI 'upload' failed to upload to fylesystem.`)
