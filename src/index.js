@@ -22,7 +22,7 @@ async function main() {
 
   /******************************* 1. COLLECT ***********************************/
   core.startGroup(`Collecting`)
-  const collectArgs = [`--numberOfRuns=${input.runs}`]
+  const collectArgs = [`--numberOfRuns=1`]
 
   if (input.urls) {
     for (const url of input.urls) {
@@ -35,9 +35,9 @@ async function main() {
   const uploadStatus = runChildCommand('upload', ['--target=filesystem', `--outputDir=${resultsPath}`])
   if (uploadStatus !== 0) throw new Error(`LHCI 'upload' failed to upload to fylesystem.`)
 
-  core.endGroup() // Collecting
-
   core.info(`result: ${JSON.stringify(resultsPath, null, '  ')}`)
+
+  core.endGroup() // Collecting
 
   await setOutput(resultsPath)
   await setAnnotations(resultsPath) // set failing error/warning annotations
