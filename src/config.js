@@ -11,8 +11,8 @@ exports.getInput = function getInputArgs() {
   }
 
   return {
-    configPath,
     urls,
+    configPath,
   }
 }
 
@@ -40,4 +40,14 @@ function getList(arg, separator = '\n') {
     })
     return url
   })
+}
+
+/**
+* @param {string | null} configPath
+*/
+
+exports.hasAssertConfig = function hasAssertConfig(configPath) {
+ if (!configPath) return false
+ const rcFileObj = loadRcFile(configPath)
+ return Boolean(get(rcFileObj, 'ci.assert'))
 }
