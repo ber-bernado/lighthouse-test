@@ -1,4 +1,5 @@
 const core = require('@actions/core')
+const { loadRcFile } = require('@lhci/utils/src/lighthouserc')
 const { resolve } = require('path')
 
 exports.getInput = function getInputArgs() {
