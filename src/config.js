@@ -1,6 +1,5 @@
 const core = require('@actions/core')
 const { loadRcFile } = require('@lhci/utils/src/lighthouserc')
-const { get } = require('lodash')
 const { resolve } = require('path')
 
 exports.getInput = function getInputArgs() {
@@ -15,39 +14,23 @@ exports.getInput = function getInputArgs() {
     process.exit(1)
   }
 
-  const temporaryPublicStorage = core.getInput('temporaryPublicStorage') === 'true' ? true : false
-  if (serverBaseUrl && temporaryPublicStorage) {
-    core.setFailed(`Both LHCI server and Temporary storage are set, choose one upload method.`)
-    process.exit(1)
-  }
-
-  let staticDistDir = null
   let urls = null
-  let numberOfRuns = null
 
   // Inspect lighthouserc file for malformations
   const configPath = core.getInput('configPath') ? resolve(core.getInput('configPath')) : null
   if (configPath) {
     const rcFileObj = loadRcFile(configPath)
-    if (!rcFileObj.ci) {
+    const { ci } = rcFileObj
+    const { collect } = ci
+    if (!ci) {
       // Fail and exit
       core.setFailed(`Config missing top level 'ci' property`)
       process.exit(1)
     }
 
     // Check if we have a static-dist-dir
-    if (rcFileObj.ci.collect) {
-      if (rcFileObj.ci.collect.url) {
-        urls = rcFileObj.ci.collect.url
-      }
-
-      if (rcFileObj.ci.collect.staticDistDir) {
-        staticDistDir = rcFileObj.ci.collect.staticDistDir
-      }
-
-      if (rcFileObj.ci.collect.numberOfRuns) {
-        numberOfRuns = rcFileObj.ci.collect.numberOfRuns
-      }
+    if (collect && collect.url) {
+      urls = collect.url
     }
   }
 
@@ -55,41 +38,15 @@ exports.getInput = function getInputArgs() {
   urls = urls || interpolateProcessIntoUrls(getList('urls'))
 
   // Make sure we have either urls or a static-dist-dir
-  if (!urls && !staticDistDir) {
+  if (!urls) {
     // Fail and exit
     core.setFailed(`Need either 'urls' in action parameters or a 'static_dist_dir' in lighthouserc file`)
     process.exit(1)
   }
 
   return {
-    // collect
-    urls,
-    runs: core.getInput('runs') ? parseInt(core.getInput('runs'), 10) : numberOfRuns || 1, // `runs`, check config, and fallback to 1
-    staticDistDir,
-    // assert
-    budgetPath: core.getInput('budgetPath') || '',
-    configPath,
-    // upload
-    serverBaseUrl,
-    serverToken,
-    temporaryPublicStorage,
-    uploadArtifacts: core.getInput('uploadArtifacts') === 'true' ? true : false,
-    basicAuthUsername: core.getInput('basicAuthUsername') || 'lighthouse',
-    basicAuthPassword: core.getInput('basicAuthPassword'),
-    artifactName: core.getInput('artifactName'),
+    urls
   }
-}
-
-/**
- * Check if the file under `configPath` has `assert` params set.
- *
- * @param {string | null} configPath
- */
-
-exports.hasAssertConfig = function hasAssertConfig(configPath) {
-  if (!configPath) return false
-  const rcFileObj = loadRcFile(configPath)
-  return Boolean(get(rcFileObj, 'ci.assert'))
 }
 
 /**

@@ -1,18 +1,14 @@
-require('./utils/support-lh-plugins') // add automatic support for LH Plugins env
 const core = require('@actions/core')
 const { join } = require('path')
 const childProcess = require('child_process')
 const lhciCliPath = require.resolve('@lhci/cli/src/cli')
-const { getInput, hasAssertConfig } = require('./config')
-const { uploadArtifacts } = require('./utils/artifacts')
-const { setAnnotations } = require('./utils/annotations')
+const { getInput } = require('./config')
 const { setOutput } = require('./utils/output')
 
 /**
  * Audit urls with Lighthouse CI in 3 stages:
  * 1. collect (using lhci collect or the custom PSI runner, store results as artifacts)
  * 2. assert (assert results using budgets or LHCI assertions)
- * 3. upload (upload results to LHCI Server, Temporary Public Storage)
  */
 
 async function main() {
@@ -33,8 +29,6 @@ async function main() {
       collectArgs.push(`--url=${url}`)
     }
   }
-  // else LHCI will panic with a non-zero exit code...
-
   if (input.configPath) collectArgs.push(`--config=${input.configPath}`)
 
   const collectStatus = runChildCommand('collect', collectArgs)
@@ -42,68 +36,7 @@ async function main() {
 
   core.endGroup() // Collecting
 
-  /******************************* 2. ASSERT ************************************/
-  if (input.budgetPath || hasAssertConfig(input.configPath)) {
-    core.startGroup(`Asserting`)
-    const assertArgs = []
-
-    if (input.budgetPath) {
-      assertArgs.push(`--budgetsFile=${input.budgetPath}`)
-    } else {
-      assertArgs.push(`--config=${input.configPath}`)
-    }
-
-    // run lhci with problem matcher
-    // https://github.com/actions/toolkit/blob/master/docs/commands.md#problem-matchers
-    runChildCommand('assert', assertArgs)
-    core.endGroup() // Asserting
-  }
-
-  /******************************* 3. UPLOAD ************************************/
-  core.startGroup(`Uploading`)
-
-  if (input.serverToken || input.temporaryPublicStorage || input.uploadArtifacts) {
-    // upload artifacts as soon as collected
-    if (input.uploadArtifacts) {
-      await uploadArtifacts(resultsPath, input.artifactName)
-    }
-
-    if (input.serverToken || input.temporaryPublicStorage) {
-      const uploadParams = []
-
-      if (input.serverToken) {
-        uploadParams.push(
-          '--target=lhci',
-          `--serverBaseUrl=${input.serverBaseUrl}`,
-          `--token=${input.serverToken}`,
-          '--ignoreDuplicateBuildFailure' // ignore failure on the same commit rerun
-        )
-      } else if (input.temporaryPublicStorage) {
-        uploadParams.push('--target=temporary-public-storage')
-      }
-
-      if (input.basicAuthPassword) {
-        uploadParams.push(
-          `--basicAuth.username=${input.basicAuthUsername}`,
-          `--basicAuth.password=${input.basicAuthPassword}`
-        )
-      }
-
-      if (input.configPath) uploadParams.push(`--config=${input.configPath}`)
-
-      const uploadStatus = runChildCommand('upload', uploadParams)
-      if (uploadStatus !== 0) throw new Error(`LHCI 'upload' failed to upload to LHCI server.`)
-    }
-  }
-
-  // run again for filesystem target
-  const uploadStatus = runChildCommand('upload', ['--target=filesystem', `--outputDir=${resultsPath}`])
-  if (uploadStatus !== 0) throw new Error(`LHCI 'upload' failed to upload to fylesystem.`)
-
-  core.endGroup() // Uploading
-
   await setOutput(resultsPath)
-  await setAnnotations(resultsPath) // set failing error/warning annotations
 }
 
 // run `main()`
