@@ -7,7 +7,7 @@ const { setOutput } = require('./utils/output')
 
 async function main() {
   // config
-  core.startGroup('Action config')
+  core.startGroup('Config')
   const resultsPath = join(process.cwd(), '.lighthouseci')
   const input = getInput()
   core.info(`Input args: ${JSON.stringify(input, null, '  ')}`)
@@ -31,7 +31,7 @@ async function main() {
     runChildCommand('assert', [`--config=${input.configPath}`])
   }
 
-  const uploadStatus = runChildCommand('upload', ['--target=filesystem', `--outputDir=${resultsPath}`])
+  const uploadStatus = runChildCommand('upload', ['--target=temporary-public-storage'])
   if (uploadStatus !== 0) throw new Error(`LHCI 'upload' failed to upload to fylesystem.`)
 
   core.info(`result: ${JSON.stringify(resultsPath, null, '  ')}`)
