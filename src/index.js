@@ -3,14 +3,7 @@ const { join } = require('path')
 const childProcess = require('child_process')
 const lhciCliPath = require.resolve('@lhci/cli/src/cli')
 const { getInput } = require('./config')
-const { setAnnotations } = require('./utils/annotations')
 const { setOutput } = require('./utils/output')
-
-/**
- * Audit urls with Lighthouse CI in 3 stages:
- * 1. collect (using lhci collect or the custom PSI runner, store results as artifacts)
- * 2. assert (assert results using budgets or LHCI assertions)
- */
 
 async function main() {
   core.startGroup('Action config')
@@ -31,9 +24,6 @@ async function main() {
   const collectStatus = runChildCommand('collect', collectArgs)
   if (collectStatus !== 0) throw new Error(`LHCI 'collect' has encountered a problem.`)
 
-  // upload artifacts as soon as collected
-  //await uploadArtifacts(resultsPath, input.artifactName)
-
   const uploadStatus = runChildCommand('upload', ['--target=filesystem', `--outputDir=${resultsPath}`])
   if (uploadStatus !== 0) throw new Error(`LHCI 'upload' failed to upload to fylesystem.`)
 
@@ -42,7 +32,6 @@ async function main() {
   core.endGroup() // Collecting
 
   await setOutput(resultsPath)
-  await setAnnotations(resultsPath) // set failing error/warning annotations
 }
 
 // run `main()`
