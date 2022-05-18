@@ -1,6 +1,7 @@
 const core = require('@actions/core')
 const { loadRcFile } = require('@lhci/utils/src/lighthouserc')
 const { resolve } = require('path')
+const { get } = require('lodash')
 
 exports.getInput = function getInputArgs() {
   const urls = interpolateProcessIntoUrls(getList('urls'))

@@ -30,7 +30,8 @@ npm manifest:
       "@actions/core": "^1.6.0",
       "@actions/github": "^5.0.0",
       "@lhci/cli": "^0.9.0",
-      "@lhci/utils": "^0.9.0"
+      "@lhci/utils": "^0.9.0",
+      "lodash": "^4.17.21"
     },
     "devDependencies": {
       "@types/node": "16.11.12",
