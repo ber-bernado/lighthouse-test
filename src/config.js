@@ -15,6 +15,7 @@ exports.getInput = function getInputArgs() {
   return {
     urls,
     configPath,
+    budgetPath: core.getInput('budgetPath') || '',
   }
 }
 

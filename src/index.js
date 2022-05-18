@@ -23,6 +23,7 @@ async function main() {
     }
   }
   if (input.configPath) collectArgs.push(`--config=${input.configPath}`)
+  if (input.budgetPath) collectArgs.push(`--budgetsFile=${input.budgetPath}`)
 
   const collectStatus = runChildCommand('collect', collectArgs)
   if (collectStatus !== 0) throw new Error(`LHCI 'collect' has encountered a problem.`)
