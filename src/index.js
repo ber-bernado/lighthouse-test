@@ -20,8 +20,6 @@ async function main() {
   core.info(`Input args: ${JSON.stringify(input, null, '  ')}`)
   core.endGroup() // Action config
 
-  console.log(resultsPath)
-
   /******************************* 1. COLLECT ***********************************/
   core.startGroup(`Collecting`)
   const collectArgs = [`--numberOfRuns=${input.runs}`]
@@ -38,6 +36,8 @@ async function main() {
   if (uploadStatus !== 0) throw new Error(`LHCI 'upload' failed to upload to fylesystem.`)
 
   core.endGroup() // Collecting
+
+  core.info(`result: ${JSON.stringify(resultsPath, null, '  ')}`)
 
   await setOutput(resultsPath)
   await setAnnotations(resultsPath) // set failing error/warning annotations
