@@ -31,7 +31,7 @@ async function main() {
     runChildCommand('assert', [`--config=${input.configPath}`])
   }
 
-  const uploadStatus = runChildCommand('upload', ['--target=temporary-public-storage'])
+  const uploadStatus = runChildCommand('upload', ['--target=filesystem', `--outputDir=${resultsPath}`])
   if (uploadStatus !== 0) throw new Error(`LHCI 'upload' failed to upload to fylesystem.`)
 
   core.info(`result: ${JSON.stringify(resultsPath, null, '  ')}`)
