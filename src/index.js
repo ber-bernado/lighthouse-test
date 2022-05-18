@@ -2,7 +2,7 @@ const core = require('@actions/core')
 const { join } = require('path')
 const childProcess = require('child_process')
 const lhciCliPath = require.resolve('@lhci/cli/src/cli')
-const { getInput } = require('./config')
+const { getInput, hasAssertConfig } = require('./config')
 const { setOutput } = require('./utils/output')
 
 async function main() {
