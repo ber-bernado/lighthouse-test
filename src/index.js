@@ -4,6 +4,7 @@ const childProcess = require('child_process')
 const lhciCliPath = require.resolve('@lhci/cli/src/cli')
 const { getInput, hasAssertConfig } = require('./config')
 const { setOutput } = require('./utils/output')
+const { setAnnotations } = require('./utils/annotations')
 
 async function main() {
   // config
@@ -40,6 +41,7 @@ async function main() {
   core.endGroup()
 
   await setOutput(resultsPath)
+  await setAnnotations(resultsPath)
 }
 
 // run `main()`
