@@ -1,3 +1,4 @@
+require('./utils/support-lh-plugins') // add automatic support for LH Plugins env
 const core = require('@actions/core')
 const { join } = require('path')
 const childProcess = require('child_process')
@@ -19,40 +20,21 @@ async function main() {
   core.info(`Input args: ${JSON.stringify(input, null, '  ')}`)
   core.endGroup() // Action config
 
+  console.log(resultsPath)
+
   /******************************* 1. COLLECT ***********************************/
   core.startGroup(`Collecting`)
   const collectArgs = [`--numberOfRuns=${input.runs}`]
 
-  if (input.staticDistDir) {
-    collectArgs.push(`--static-dist-dir=${input.staticDistDir}`)
-  } else if (input.urls) {
+  if (input.urls) {
     for (const url of input.urls) {
       collectArgs.push(`--url=${url}`)
     }
-  }
-  if (input.configPath) collectArgs.push(`--config=${input.configPath}`)
-
+  } 
   const collectStatus = runChildCommand('collect', collectArgs)
   if (collectStatus !== 0) throw new Error(`LHCI 'collect' has encountered a problem.`)
 
   core.endGroup() // Collecting
-
-  /******************************* 2. ASSERT ************************************/
-  if (input.budgetPath || hasAssertConfig(input.configPath)) {
-    core.startGroup(`Asserting`)
-    const assertArgs = []
-
-    if (input.budgetPath) {
-      assertArgs.push(`--budgetsFile=${input.budgetPath}`)
-    } else {
-      assertArgs.push(`--config=${input.configPath}`)
-    }
-
-    // run lhci with problem matcher
-    // https://github.com/actions/toolkit/blob/master/docs/commands.md#problem-matchers
-    runChildCommand('assert', assertArgs)
-    core.endGroup() // Asserting
-  }
 
   await setOutput(resultsPath)
   await setAnnotations(resultsPath) // set failing error/warning annotations
