@@ -34,6 +34,9 @@ async function main() {
   const collectStatus = runChildCommand('collect', collectArgs)
   if (collectStatus !== 0) throw new Error(`LHCI 'collect' has encountered a problem.`)
 
+  const uploadStatus = runChildCommand('upload', ['--target=filesystem', `--outputDir=${resultsPath}`])
+  if (uploadStatus !== 0) throw new Error(`LHCI 'upload' failed to upload to fylesystem.`)
+
   core.endGroup() // Collecting
 
   await setOutput(resultsPath)
