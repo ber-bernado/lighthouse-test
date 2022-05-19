@@ -1,3 +1,4 @@
+require('./utils/support-lh-plugins') 
 const core = require('@actions/core')
 const { join } = require('path')
 const childProcess = require('child_process')
