@@ -24,11 +24,15 @@ async function main() {
     }
   }
 
-  if (input.budgetPath) collectArgs.push(`--budgetsFile=${input.budgetPath}`)
+  
   if (input.configPath) collectArgs.push(`--config=${input.configPath}`)
 
   const collectStatus = runChildCommand('collect', collectArgs)
   if (collectStatus !== 0) throw new Error(`LHCI 'collect' has encountered a problem.`)
+
+  if (input.budgetPath) { 
+    runChildCommand('assert', [`--budgetsFile=${input.budgetPath}`])
+  }
 
   const uploadStatus = runChildCommand('upload', ['--target=filesystem', `--outputDir=${resultsPath}`])
   if (uploadStatus !== 0) throw new Error(`LHCI 'upload' failed to upload to fylesystem.`)
