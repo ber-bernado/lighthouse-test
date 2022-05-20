@@ -14,7 +14,7 @@ Platform:
   darwin x64
 
 Trace: 
-  Error: EACCES: permission denied, open '/Users/bernado.soeryo/Documents/WORKS/lighthouse-test/yarn.lock'
+  Error: EACCES: permission denied, unlink '/Users/bernado.soeryo/Documents/WORKS/lighthouse-test/node_modules/is-windows/LICENSE'
 
 npm manifest: 
   {
@@ -31,9 +31,12 @@ npm manifest:
       "@actions/github": "^5.0.0",
       "@lhci/cli": "^0.9.0",
       "@lhci/utils": "^0.9.0",
+      "is-windows": "^1.0.2",
       "lodash": "^4.17.21"
     },
     "devDependencies": {
+      "@types/is-windows": "^1.0.0",
+      "@types/lodash": "^4.14.177",
       "@types/node": "16.11.12",
       "typescript": "^4.5.2"
     }
@@ -210,16 +213,6 @@ Lockfile:
     integrity sha512-XIB2XbzHTN6ieIjfIMV9hlVcfPU26s2vafYWQcZHWXHOxiaRZYEDKEwdl129Zyg50+foYV2jCgtrqSA6qNuNSA==
     dependencies:
       defer-to-connect "^1.0.1"
-  
-  "@types/is-windows@^1.0.0":
-    version "1.0.0"
-    resolved "https://registry.yarnpkg.com/@types/is-windows/-/is-windows-1.0.0.tgz#1011fa129d87091e2f6faf9042d6704cdf2e7be0"
-    integrity sha512-tJ1rq04tGKuIJoWIH0Gyuwv4RQ3+tIu7wQrC0MV47raQ44kIzXSSFKfrxFUOWVRvesoF7mrTqigXmqoZJsXwTg==
-  
-  "@types/lodash@^4.14.177":
-    version "4.14.178"
-    resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.178.tgz#341f6d2247db528d4a13ddbb374bcdc80406f4f8"
-    integrity sha512-0d5Wd09ItQWH1qFbEyQ7oTQ3GZrMfth5JkbN3EvTKLXcHLRDSXeLnlvlOn0wvxVIwK5o2M8JzP/OWz7T3NRsbw==
   
   "@types/node@*":
     version "17.0.18"
@@ -1538,11 +1531,6 @@ Lockfile:
     version "2.0.0"
     resolved "https://registry.yarnpkg.com/prepend-http/-/prepend-http-2.0.0.tgz#e92434bfa5ea8c19f41cdfd401d741a3c819d897"
     integrity sha1-6SQ0v6XqjBn0HN/UAddBo8gZ2Jc=
-  
-  prettier@^2.5.1:
-    version "2.5.1"
-    resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.5.1.tgz#fff75fa9d519c54cf0fce328c1017d94546bc56a"
-    integrity sha512-vBZcPRUR5MZJwoyi3ZoyQlc1rXeEck8KgeC9AwwOn+exuxLxq5toTRDTSaVrXHxelDMHy9zlicw8u66yxoSUFg==
   
   proxy-addr@~2.0.7:
     version "2.0.7"
