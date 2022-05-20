@@ -8,7 +8,7 @@ const { setOutput } = require('./utils/output')
 
 async function main() {
   // config
-  core.startGroup('Config')
+  core.startGroup('Config LH')
   const resultsPath = join(process.cwd(), '.lighthouseci')
   const input = getInput()
   core.info(`Input args: ${JSON.stringify(input, null, '  ')}`)
@@ -16,7 +16,7 @@ async function main() {
 
   // colecting
   core.startGroup(`Collecting`)
-  const collectArgs = [`--numberOfRuns=1`, '--collect.settings.chromeFlags=--no-sandbox']
+  const collectArgs = [`--numberOfRuns=1`, '--settings.chromeFlags=--no-sandbox --disable-dev-shm-usage --headless --in-process-gpu']
 
   if (input.urls) {
     for (const url of input.urls) {
