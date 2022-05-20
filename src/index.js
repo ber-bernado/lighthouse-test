@@ -34,7 +34,7 @@ async function main() {
     runChildCommand('assert', [`--budgetsFile=${input.budgetPath}`])
   }
 
-  const uploadStatus = runChildCommand('upload', ['--target=filesystem', `--outputDir=${resultsPath}`])
+  const uploadStatus = runChildCommand('upload', ['--target=filesystem', `--outputDir=${resultsPath}`, '--settings.chromeFlags=--headless --no-sandbox'])
   if (uploadStatus !== 0) throw new Error(`LHCI 'upload' failed to upload to fylesystem.`)
 
   core.info(`result: ${JSON.stringify(resultsPath, null, '  ')}`)
