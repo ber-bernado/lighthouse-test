@@ -16,7 +16,7 @@ async function main() {
 
   // colecting
   core.startGroup(`Collecting`)
-  const collectArgs = [`--numberOfRuns=1`]
+  const collectArgs = [`--numberOfRuns=1`, '--settings.chromeFlags=--headless --no-sandbox']
 
   if (input.urls) {
     for (const url of input.urls) {
@@ -34,7 +34,7 @@ async function main() {
     runChildCommand('assert', [`--budgetsFile=${input.budgetPath}`])
   }
 
-  const uploadStatus = runChildCommand('upload', ['--target=filesystem', `--outputDir=${resultsPath}`, '--settings.chromeFlags=--headless --no-sandbox'])
+  const uploadStatus = runChildCommand('upload', ['--target=filesystem', `--outputDir=${resultsPath}`])
   if (uploadStatus !== 0) throw new Error(`LHCI 'upload' failed to upload to fylesystem.`)
 
   core.info(`result: ${JSON.stringify(resultsPath, null, '  ')}`)
