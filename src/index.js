@@ -16,7 +16,7 @@ async function main() {
 
   // colecting
   core.startGroup(`Collecting`)
-  const collectArgs = [`--numberOfRuns=1`, '--settings.chromeFlags=--headless --no-sandbox']
+  const collectArgs = [`--numberOfRuns=1`, '--collect.settings.chromeFlags=--no-sandbox']
 
   if (input.urls) {
     for (const url of input.urls) {
